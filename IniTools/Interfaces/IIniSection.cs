@@ -2,6 +2,6 @@
 
 public interface IIniSection : IIniElement
 {
-    IIniSectionName Name { get; }
+    IIniSectionName? Name { get; }
     List<IIniListAble> Elements { get; }
 }
