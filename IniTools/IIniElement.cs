@@ -1,3 +1,3 @@
 ﻿namespace IniTools;
 
-public interface IIniElements { }
+public interface IIniElement { }
