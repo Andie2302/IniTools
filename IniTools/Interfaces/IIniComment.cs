@@ -2,5 +2,5 @@
 
 public interface IIniComment : IIniLine, IIniListAble
 {
-    string Comment { get; set; }
+    string? Comment { get; set; }
 }
