@@ -1,7 +1,6 @@
 ﻿namespace IniTools.Scratch;
 
 public interface IIniSettings;
-
 public sealed class IniParserSettings : IIniSettings
 {
     public readonly List<string> CommentPrefixes = [];
@@ -10,7 +9,6 @@ public sealed class IniParserSettings : IIniSettings
     {
         Init();
     }
-
     private void Init()
     {
         CommentPrefixes.Add(";");
