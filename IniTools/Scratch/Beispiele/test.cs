@@ -3,7 +3,7 @@ using System.Linq;
 using IniTools.Base.Classes;
 using IniTools.Base.Interfaces;
 
-namespace IniTools.Scratch;
+namespace IniTools.Scratch.Beispiele;
 
 public static class IniTest
 {
