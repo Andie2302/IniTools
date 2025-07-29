@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using IniTools.Interfaces;
+using IniTools.Base.Interfaces;
 
-namespace IniTools.Classes;
+namespace IniTools.Base.Classes;
 
 public sealed class IniSection(IIniSectionName? name) : IIniSection
 {
