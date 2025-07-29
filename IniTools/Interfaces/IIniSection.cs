@@ -1,4 +1,6 @@
-﻿namespace IniTools.Interfaces;
+﻿using System.Collections.Generic;
+
+namespace IniTools.Interfaces;
 
 public interface IIniSection : IIniElement
 {
