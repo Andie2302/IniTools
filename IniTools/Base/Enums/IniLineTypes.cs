@@ -1,4 +1,4 @@
-﻿namespace IniTools.Enums;
+﻿namespace IniTools.Base.Enums;
 
 public enum IniLineTypes
 {
