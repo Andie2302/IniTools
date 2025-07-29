@@ -86,7 +86,7 @@ public class IniData : IDictionary< string , IIniSection >
         try {
             var converter = System.ComponentModel.TypeDescriptor.GetConverter ( typeof ( T ) );
 
-            return (T?) converter.ConvertFromString ( stringValue );
+            return (T?) converter.ConvertFromString ( null , System.Globalization.CultureInfo.InvariantCulture , stringValue );
         }
         catch ( Exception ex ) { throw new FormatException ( $"Der Wert '{stringValue}' für den Schlüssel '{key}' in der Sektion '{sectionName}' konnte nicht in den Typ {typeof ( T ).Name} konvertiert werden." , ex ); }
     }
@@ -103,7 +103,7 @@ public class IniData : IDictionary< string , IIniSection >
 
         try {
             var converter = System.ComponentModel.TypeDescriptor.GetConverter ( typeof ( T ) );
-            value = (T?) converter.ConvertFromString ( stringValue );
+            value = (T?) converter.ConvertFromString ( null , System.Globalization.CultureInfo.InvariantCulture , stringValue );
 
             return true;
         }
