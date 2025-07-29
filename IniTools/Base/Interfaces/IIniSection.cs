@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace IniTools.Interfaces;
+namespace IniTools.Base.Interfaces;
 
 public interface IIniSection : IIniElement
 {
