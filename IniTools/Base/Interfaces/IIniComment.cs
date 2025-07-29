@@ -1,4 +1,4 @@
-﻿namespace IniTools.Interfaces;
+﻿namespace IniTools.Base.Interfaces;
 
 public interface IIniComment : IIniLine, IIniListAble
 {
