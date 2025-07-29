@@ -75,4 +75,43 @@ public class IniData : IDictionary< string , IIniSection >
         set { SetValue ( sectionName , key , value ?? string.Empty ); }
     }
     #endregion
+
+    #region Typenkonvertierung
+    public T? GetValue < T > ( string sectionName , string key )
+    {
+        var stringValue = GetValue ( sectionName , key );
+
+        if ( stringValue is null ) { return default; }
+
+        try {
+            var converter = System.ComponentModel.TypeDescriptor.GetConverter ( typeof ( T ) );
+
+            return (T?) converter.ConvertFromString ( stringValue );
+        }
+        catch ( Exception ex ) { throw new FormatException ( $"Der Wert '{stringValue}' für den Schlüssel '{key}' in der Sektion '{sectionName}' konnte nicht in den Typ {typeof ( T ).Name} konvertiert werden." , ex ); }
+    }
+
+    public bool TryGetValue < T > ( string sectionName , string key , out T? value )
+    {
+        var stringValue = GetValue ( sectionName , key );
+
+        if ( stringValue is null ) {
+            value = default;
+
+            return false;
+        }
+
+        try {
+            var converter = System.ComponentModel.TypeDescriptor.GetConverter ( typeof ( T ) );
+            value = (T?) converter.ConvertFromString ( stringValue );
+
+            return true;
+        }
+        catch {
+            value = default;
+
+            return false;
+        }
+    }
+    #endregion
 }
