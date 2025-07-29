@@ -2,7 +2,13 @@
 
 namespace IniTools.Base.Classes;
 
-public sealed class IniSectionName(string? name) : IIniSectionName
+public sealed class IniSectionName ( string? name ) : IIniSectionName
 {
-    public string? Value { get; set; } = name;
+    private string? _value = name;
+    public string? Value
+    {
+        get => ToSectionKey ( _value );
+        set => _value = value;
+    }
+    public static string ToSectionKey ( string? sectionName ) => sectionName?.Trim() ?? string.Empty;
 }
