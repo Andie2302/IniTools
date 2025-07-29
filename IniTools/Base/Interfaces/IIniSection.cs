@@ -2,7 +2,7 @@
 
 namespace IniTools.Base.Interfaces;
 
-public interface IIniSection : IIniSortAble<IIniSection>, IIniElement
+public interface IIniSection : IIniSortAble< IIniSection > , IIniElement
 {
     string Name { get; }
     List< IIniSectionAddAble > Elements { get; }
