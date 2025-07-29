@@ -2,5 +2,5 @@
 
 public interface IIniSectionName : IIniLine
 {
-    string? Name { get; set; }
+    string? Value { get; set; }
 }
