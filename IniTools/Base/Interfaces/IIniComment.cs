@@ -2,5 +2,5 @@
 
 public interface IIniComment : IIniLine<IIniComment>, IIniSectionAddAble
 {
-    string? Comment { get; set; }
+    string Comment { get; set; }
 }
