@@ -57,11 +57,6 @@ public class IniData : IDictionary< string , IIniSection >
     #endregion
 
     #region Fluent API
-    /// <summary>
-    /// Startet die Fluent API, um eine Sektion zu erstellen oder zu bearbeiten.
-    /// </summary>
-    /// <param name="sectionName">Der Name der Sektion.</param>
-    /// <returns>Einen IniSectionBuilder, um Methoden zu verketten.</returns>
     public IniSectionBuilder WithSection ( string sectionName )
     {
         if ( TryGetValue ( sectionName , out var section ) ) { return new IniSectionBuilder ( this , section ); }
