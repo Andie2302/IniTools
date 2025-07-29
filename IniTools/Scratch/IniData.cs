@@ -67,4 +67,12 @@ public class IniData : IDictionary< string , IIniSection >
         return new IniSectionBuilder ( this , section );
     }
     #endregion
+
+    #region Indexer-Zugriff
+    public string? this [ string sectionName , string key ]
+    {
+        get => GetValue ( sectionName , key );
+        set { SetValue ( sectionName , key , value ?? string.Empty ); }
+    }
+    #endregion
 }
