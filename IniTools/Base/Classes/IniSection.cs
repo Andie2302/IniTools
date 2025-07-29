@@ -13,12 +13,6 @@ public sealed class IniSection ( string name ) : IIniSection
     public bool Equals ( IIniSection? other ) { return other is not null && ( ReferenceEquals ( this , other ) || string.Equals ( ToSectionKey ( Name ) , ToSectionKey ( other.Name ) , StringComparison.OrdinalIgnoreCase ) ); }
     public override bool Equals ( object? obj ) { return Equals ( obj as IIniSection ); }
     public override int GetHashCode() { return ToSectionKey ( Name ).GetHashCode(); }
-
-    public static bool operator == ( IniSection? left , IniSection? right )
-    {
-        if ( left is null ) { return right is null; }
-        return left.Equals ( right );
-    }
-
+    public static bool operator == ( IniSection? left , IniSection? right ) { return left is null ? right is null : left.Equals ( right ); }
     public static bool operator != ( IniSection? left , IniSection? right ) => !( left == right );
 }
