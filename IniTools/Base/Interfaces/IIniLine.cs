@@ -1,3 +1,3 @@
-﻿namespace IniTools.Interfaces;
+﻿namespace IniTools.Base.Interfaces;
 
 public interface IIniLine : IIniElement;
