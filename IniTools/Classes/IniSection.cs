@@ -1,4 +1,5 @@
-﻿using IniTools.Interfaces;
+﻿using System.Collections.Generic;
+using IniTools.Interfaces;
 
 namespace IniTools.Classes;
 
