@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
 using IniTools.Base.Interfaces;
 
-namespace IniTools.Scratch;
-
 public class IniData : IDictionary< IIniSectionName , IIniSection >
 {
     private readonly Dictionary< IIniSectionName , IIniSection > _sections = new Dictionary< IIniSectionName , IIniSection >();
 
 }
-
 
 /*
    private readonly Dictionary< IIniSectionName , IIniSection > _sections = new Dictionary< IIniSectionName , IIniSection >();
