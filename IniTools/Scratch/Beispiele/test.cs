@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using IniTools.Base.Classes;
 using IniTools.Base.Interfaces;
 
 namespace IniTools.Scratch.Beispiele;
 
+[ SuppressMessage ( "ReSharper" , "UseObjectOrCollectionInitializer" ) ]
 public static class IniTest
 {
     public static void Main() { }
@@ -70,6 +72,43 @@ public static class IniTest
         Console.WriteLine ( $"  -> Gelesener Datenbank-Port: {dbPort}" );
         Console.WriteLine ( "\n--- Komplette INI-Struktur ---" );
         PrintIniData03 ( iniData );
+    }
+
+    public static void Test04()
+    {
+        Console.WriteLine ( "--- IniTools Typenkonvertierungs-Demo ---" );
+        var iniData = new IniData();
+
+        // 1. INI-Daten befüllen
+        iniData["Server" , "Port"] = "8080";
+        iniData["Server" , "TimeoutSeconds"] = "30.5";
+        iniData["Server" , "EnableSSL"] = "true";
+        iniData["Server" , "Admin"] = "Andreas"; // Ein normaler String
+        Console.WriteLine ( "\n[AKTION] Test-Daten wurden erstellt." );
+
+        // 2. Werte mit Typenkonvertierung auslesen
+        Console.WriteLine ( "\n[AKTION] Lese Werte mit GetValue<T> aus..." );
+
+        // Erfolgreiche Konvertierungen
+        var port = iniData.GetValue< int > ( "Server" , "Port" );
+        var timeout = iniData.GetValue< double > ( "Server" , "TimeoutSeconds" );
+        var useSsl = iniData.GetValue< bool > ( "Server" , "EnableSSL" );
+        var adminName = iniData.GetValue< string > ( "Server" , "Admin" );
+        Console.WriteLine ( $"  -> Port (int): {port}" );
+        Console.WriteLine ( $"  -> Timeout (double): {timeout}" );
+        Console.WriteLine ( $"  -> SSL aktiv (bool): {useSsl}" );
+        Console.WriteLine ( $"  -> Admin (string): {adminName}" );
+
+        // 3. Fehlerbehandlung mit TryGetValue<T> demonstrieren
+        Console.WriteLine ( "\n[AKTION] Lese Werte sicher mit TryGetValue<T> aus..." );
+
+        // Dieser Schlüssel existiert nicht
+        if ( iniData.TryGetValue< int > ( "Server" , "MaxConnections" , out var maxConnections ) ) { Console.WriteLine ( $"  -> Max. Verbindungen: {maxConnections}" ); }
+        else { Console.WriteLine ( "  -> Der Schlüssel 'MaxConnections' wurde nicht gefunden." ); }
+
+        // Dieser Wert kann nicht konvertiert werden ("Andreas" ist keine Zahl)
+        if ( iniData.TryGetValue< int > ( "Server" , "Admin" , out var adminId ) ) { Console.WriteLine ( $"  -> Admin ID: {adminId}" ); }
+        else { Console.WriteLine ( "  -> Der Wert für 'Admin' konnte nicht in eine Zahl konvertiert werden." ); }
     }
 
     private static void PrintIniData01 ( IniData data )
