@@ -1,3 +1,3 @@
 ﻿namespace IniTools.Base.Interfaces;
 
-public interface IIniListAble;
+public interface IIniSectionAddAble;
