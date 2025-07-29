@@ -10,7 +10,7 @@ public sealed class IniSection ( IIniSectionName? name ) : IIniSection
     public IIniSectionNameComparer Comparer = new IniSectionNameComparer();
     public IniSection(string name) : this(new IniSectionName(name)) { }
     public IIniSectionName? Name { get; } = name;
-    public List<IIniListAble> Elements { get; } = [];
+    public List<IIniSectionAddAble> Elements { get; } = [];
     #region Vereinfachte Vergleichs- und Gleichheitsimplementierung
     /// <summary>
     /// Vergleicht diese Sektion mit einer anderen für die Sortierung (basiert auf dem Namen).
@@ -27,13 +27,7 @@ public sealed class IniSection ( IIniSectionName? name ) : IIniSection
     /// <summary>
     /// Prüft auf Gleichheit mit einer anderen Sektion (nur basierend auf dem Namen).
     /// </summary>
-    public bool Equals(IIniSection? other)
-    {
-        if (other is null) return false;
-        if (ReferenceEquals(this, other)) return true;
-
-        return new IniSectionNameComparer().Equals(this.Name, other.Name);
-    }
+    public bool Equals(IIniSection? other) { return other is not null && ( ReferenceEquals ( this , other ) || new IniSectionNameComparer().Equals ( this.Name , other.Name ) ); }
 
     /// <summary>
     /// Überschreibt die Basis-Equals-Methode.
