@@ -4,6 +4,6 @@ namespace IniTools.Base.Interfaces;
 
 public interface IIniSection : IIniSortAble<IIniSection>, IIniElement
 {
-    IIniSectionName? Name { get; }
+    string Name { get; }
     List< IIniSectionAddAble > Elements { get; }
 }
