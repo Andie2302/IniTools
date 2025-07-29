@@ -5,11 +5,11 @@ using IniTools.Scratch;
 
 namespace IniTools.Base.Classes;
 
-public sealed class IniSection ( IIniSectionName? name ) : IIniSection
+public sealed class IniSection : IIniSection
 {
     public IIniSectionNameComparer Comparer = new IniSectionNameComparer();
-    public IniSection(string name) : this(new IniSectionName(name)) { }
-    public IIniSectionName? Name { get; } = name;
+    public IniSection(string name) { Name = name; }
+    public string Name { get; set; }
     public List<IIniSectionAddAble> Elements { get; } = [];
     #region Vereinfachte Vergleichs- und Gleichheitsimplementierung
     /// <summary>
