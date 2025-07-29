@@ -1,6 +1,6 @@
-﻿using IniTools.Interfaces;
+﻿using IniTools.Base.Interfaces;
 
-namespace IniTools.Classes;
+namespace IniTools.Base.Classes;
 
 public sealed class IniSectionName(string? name) : IIniSectionName
 {
