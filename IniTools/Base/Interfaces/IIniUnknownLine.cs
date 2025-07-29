@@ -1,6 +1,6 @@
 ﻿namespace IniTools.Base.Interfaces;
 
-public interface IIniUnknownLine : IIniLine, IIniListAble
+public interface IIniUnknownLine : IIniLine, IIniSectionAddAble
 {
     string? Line { get; set; }
 }
