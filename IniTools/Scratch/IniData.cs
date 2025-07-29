@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using IniTools.Base.Interfaces;
 
-namespace IniTools.Loader;
+namespace IniTools.Scratch;
 
 public static class IniTools
 {
