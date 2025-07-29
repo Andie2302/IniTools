@@ -16,7 +16,7 @@ public sealed class IniSectionBuilder
         _section = section;
     }
 
-    public IniSectionBuilder Set ( string key , string? value )
+    public IniSectionBuilder Set ( string key , string value )
     {
         var kvp = _section.Elements.OfType< IIniKeyValue >().FirstOrDefault ( k => string.Equals ( k.Key , key , StringComparison.OrdinalIgnoreCase ) );
 
@@ -26,7 +26,7 @@ public sealed class IniSectionBuilder
         return this;
     }
 
-    public IniSectionBuilder WithComment ( string? comment )
+    public IniSectionBuilder WithComment ( string comment )
     {
         _section.Elements.Add ( new IniComment ( comment ) );
 
