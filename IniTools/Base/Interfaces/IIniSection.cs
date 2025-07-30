@@ -19,5 +19,5 @@ public interface IIniSection : IIniSortAble< IIniSection > , IIniElement
     /// Gets the collection of elements within the section.
     /// These elements can include key-value pairs, comments, or empty lines.
     /// </summary>
-    List< IIniSectionAddAble > Elements { get; }
+    IReadOnlyList< IIniSectionAddAble > Elements { get; }
 }
