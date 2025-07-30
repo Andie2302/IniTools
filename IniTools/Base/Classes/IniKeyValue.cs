@@ -80,9 +80,7 @@ public sealed class IniKeyValue ( string key , string value ) : IIniKeyValue
     /// </returns>
     public override int GetHashCode()
     {
-        // Manuelle Implementierung für .NET Standard 2.0 Kompatibilität
-        unchecked // Überlauf ist für Hashcodes beabsichtigt und okay.
-        {
+        unchecked {
             var hash = 17;
             hash = hash * 23 + ( Key?.ToLowerInvariant() ?? "" ).GetHashCode();
             hash = hash * 23 + ( Value?.ToLowerInvariant() ?? "" ).GetHashCode();
