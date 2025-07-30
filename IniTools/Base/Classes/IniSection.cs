@@ -11,6 +11,9 @@ namespace IniTools.Base.Classes;
 /// </summary>
 public sealed class IniSection ( string name ) : IIniSection
 {
+    // Die interne Liste ist jetzt 'private' und von außen geschützt.
+    private readonly List<IIniSectionAddAble> _elements = [];
+
     /// <summary>
     /// Gets the name of the INI section.
     /// </summary>
@@ -19,16 +22,31 @@ public sealed class IniSection ( string name ) : IIniSection
     /// It is case-insensitive and may not contain leading or trailing whitespace.
     /// </remarks>
     public string Name { get; } = name;
+
     /// <summary>
-    /// Gets the collection of elements contained within the current INI section.
+    /// Gets a read-only collection of the elements contained within the current INI section.
     /// </summary>
     /// <remarks>
     /// This property provides access to the list of elements that belong to the specific INI section.
     /// Each element adheres to the <see cref="IIniSectionAddAble"/> interface, allowing various types
     /// of INI components (such as key-value pairs, comments, and empty lines) to coexist within the section.
+    /// The collection is read-only to prevent direct modification from outside the class.
     /// </remarks>
-    public List< IIniSectionAddAble > Elements { get; } = [ ];
+    public IReadOnlyList<IIniSectionAddAble> Elements => _elements;
 
+    /// <summary>
+    /// Adds an element to the section in a controlled manner.
+    /// </summary>
+    /// <param name="element">The element to add to the section.</param>
+    public void AddElement(IIniSectionAddAble element)
+    {
+        if (element is null)
+        {
+            throw new ArgumentNullException(nameof(element));
+        }
+        _elements.Add(element);
+    }
+    
     /// <summary>
     /// Converts the given section name to a normalized key representation by trimming
     /// whitespace. If the provided section name is null, an empty string is returned.
@@ -43,12 +61,6 @@ public sealed class IniSection ( string name ) : IIniSection
     /// <param name="other">The other <see cref="IIniSection"/> instance to compare to.</param>
     /// <returns>
     /// A signed integer that indicates the relative order of the objects being compared.
-    /// The return value has these meanings:
-    /// <list type="table">
-    /// <item><description>Less than zero: This instance precedes the other instance in the sort order.</description></item>
-    /// <item><description>Zero: This instance occurs in the same position in the sort order as the other instance.</description></item>
-    /// <item><description>Greater than zero: This instance follows the other instance in the sort order.</description></item>
-    /// </list>
     /// </returns>
     public int CompareTo ( IIniSection? other ) { return other is null ? 1 : string.Compare ( ToSectionKey ( Name ) , ToSectionKey ( other.Name ) , StringComparison.OrdinalIgnoreCase ); }
 
@@ -72,12 +84,16 @@ public sealed class IniSection ( string name ) : IIniSection
 
     /// <summary>
     /// Computes the hash code for the current <see cref="IniSection"/> instance.
-    /// The hash code is based on the section key derived from the section name.
+    /// The hash code is based on the section key derived from the section name and is case-insensitive.
     /// </summary>
     /// <returns>
     /// An integer hash code representing the current instance.
     /// </returns>
-    public override int GetHashCode() { return ToSectionKey ( Name ).GetHashCode(); }
+    public override int GetHashCode()
+    {
+        // KORREKTUR: Verwendet StringComparer, um konsistent mit Equals zu sein.
+        return StringComparer.OrdinalIgnoreCase.GetHashCode(ToSectionKey(Name));
+    }
 
     /// <summary>
     /// Determines whether two specified <see cref="IniSection"/> objects are equal.
@@ -91,14 +107,11 @@ public sealed class IniSection ( string name ) : IIniSection
 
     /// <summary>
     /// Defines the inequality operator (!=) for comparing two IniSection instances.
-    /// Returns true if the two IniSection instances are not equal; otherwise, false.
     /// </summary>
     /// <param name="left">The first IniSection to compare, or null.</param>
     /// <param name="right">The second IniSection to compare, or null.</param>
     /// <returns>
     /// True if the two IniSection instances are not equal; otherwise, false.
-    /// Two sections are considered equal if their names, after being formatted with
-    /// <see cref="ToSectionKey"/>, are equivalent in a case-insensitive comparison.
     /// </returns>
     public static bool operator != ( IniSection? left , IniSection? right ) => !( left == right );
 }
