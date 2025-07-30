@@ -65,7 +65,8 @@ public sealed class IniUnknownLine ( string line ) : IIniUnknownLine
     /// </returns>
     public override int GetHashCode()
     {
-        return ( Line?.ToLowerInvariant() ?? "" ).GetHashCode();
+        // Garantiert konsistent mit der Equals-Methode.
+        return StringComparer.OrdinalIgnoreCase.GetHashCode(Line ?? "");
     }
 
     /// <summary>
