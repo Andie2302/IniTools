@@ -61,7 +61,11 @@ public sealed class IniComment ( string comment ) : IIniComment
     /// <returns>
     /// An integer representing the hash code of the comment.
     /// </returns>
-    public override int GetHashCode() { return ( Comment.ToLowerInvariant() ?? "" ).GetHashCode(); }
+    public override int GetHashCode()
+    {
+        // Garantiert konsistent mit der Equals-Methode.
+        return StringComparer.OrdinalIgnoreCase.GetHashCode(Comment ?? "");
+    }
 
     /// <summary>
     /// Defines equality and inequality operators for IniComment objects.
