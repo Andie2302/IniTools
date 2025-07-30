@@ -33,10 +33,7 @@ public sealed class IniKeyValue ( string key , string value ) : IIniKeyValue
             return hash;
         }
 #else
-    return HashCode.Combine(
-        GetStringHashCode(Key),
-        GetStringHashCode(Value)
-    );
+        return HashCode.Combine ( GetStringHashCode ( Key ) , GetStringHashCode ( Value ) );
 #endif
     }
 
