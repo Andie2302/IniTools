@@ -5,6 +5,8 @@ namespace IniTools.Base.Classes;
 
 public sealed class IniKeyValue ( string key , string value ) : IIniKeyValue
 {
+    private const int HashSeed = 17;
+    private const int HashMultiplier = 23;
     public string Key { get; set; } = key;
     public string Value { get; set; } = value;
 
@@ -19,8 +21,6 @@ public sealed class IniKeyValue ( string key , string value ) : IIniKeyValue
 
     public bool Equals ( IIniKeyValue? other ) { return other is not null && ( ReferenceEquals ( this , other ) || string.Equals ( Key , other.Key , StringComparison.OrdinalIgnoreCase ) && string.Equals ( Value , other.Value , StringComparison.OrdinalIgnoreCase ) ); }
     public override bool Equals ( object? obj ) { return Equals ( obj as IIniKeyValue ); }
-    private const int HashSeed = 17;
-    private const int HashMultiplier = 23;
 
     public override int GetHashCode()
     {
@@ -38,6 +38,6 @@ public sealed class IniKeyValue ( string key , string value ) : IIniKeyValue
     }
 
     private static int GetStringHashCode ( string? value ) => StringComparer.OrdinalIgnoreCase.GetHashCode ( value ?? "" );
-    public static bool operator == ( IniKeyValue? left , IniKeyValue? right ) { return left is null ? right is null : left.Equals ( right ); }
+    public static bool operator == ( IniKeyValue? left , IniKeyValue? right ) { return left?.Equals ( right ) ?? right is null; }
     public static bool operator != ( IniKeyValue? left , IniKeyValue? right ) => !( left == right );
 }

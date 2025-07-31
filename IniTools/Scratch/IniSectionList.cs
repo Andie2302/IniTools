@@ -5,61 +5,105 @@ using IniTools.Base.Interfaces;
 
 namespace IniTools.Scratch;
 
-public class IniSectionList : IList< IIniSection >
+public enum CheckItemErrors
 {
-    public string SectionName { get; }
+    None ,
+    NameNotMatching ,
+    ItemIsNull ,
+    UnknownError ,
+}
+
+public interface IIniSectionList : IList< IIniSection >
+{
+    string SectionName { get; }
+    bool IsGlobal { get; }
+    int Count { get; }
+    bool IsReadOnly { get; }
+    IIniSection this [ int index ] { get; set; }
+    bool IsValidItem ( IIniSection? item , out CheckItemErrors error );
+    bool Add ( IIniSection item , out CheckItemErrors error );
+    bool Insert ( int index , IIniSection item , out CheckItemErrors error );
+    bool TrySetItem ( int index , IIniSection value , out CheckItemErrors error );
+    IEnumerator< IIniSection > GetEnumerator();
+    void Clear();
+    bool Contains ( IIniSection item );
+    void CopyTo ( IIniSection[] array , int arrayIndex );
+    bool Remove ( IIniSection item );
+    int IndexOf ( IIniSection item );
+    void RemoveAt ( int index );
+}
+
+public class IniSectionList ( string sectionName ) : IIniSectionList
+{
     private readonly List< IIniSection > _sections = [ ];
+    public string SectionName { get; } = sectionName?.Trim() ?? string.Empty;
+    public bool IsGlobal => SectionName == string.Empty;
 
-    public IniSectionList ( string sectionName )
+    public bool IsValidItem ( IIniSection? item , out CheckItemErrors error )
     {
-        if ( string.IsNullOrWhiteSpace ( sectionName ) ) { throw new ArgumentException ( "Der Name der Sektions-Liste darf nicht leer sein." , nameof ( sectionName ) ); }
+        if ( item == null ) {
+            error = CheckItemErrors.ItemIsNull;
 
-        SectionName = sectionName;
+            return false;
+        }
+
+        if ( !IsGlobal && !string.Equals ( item.Name , SectionName , StringComparison.OrdinalIgnoreCase ) ) {
+            error = CheckItemErrors.NameNotMatching;
+
+            return false;
+        }
+
+        error = CheckItemErrors.None;
+
+        return true;
     }
 
-    private void CheckItem ( IIniSection item )
+    #region IList Implementation (mit Korrekturen)
+    public bool Add ( IIniSection item , out CheckItemErrors error )
     {
-        if ( item == null ) { throw new ArgumentNullException ( nameof ( item ) , "Es können keine 'null'-Sektionen hinzugefügt werden." ); }
+        if ( !IsValidItem ( item , out error ) ) { return false; }
 
-        if ( !string.Equals ( item.Name , SectionName , StringComparison.OrdinalIgnoreCase ) ) { throw new ArgumentException ( $"Diese Liste akzeptiert nur Sektionen mit dem Namen '{SectionName}'. Die übergebene Sektion hat den Namen '{item.Name}'." , nameof ( item ) ); }
-    }
-
-    public void Add ( IIniSection item )
-    {
-        CheckItem ( item );
         _sections.Add ( item );
+
+        return true;
     }
 
-    public void Insert ( int index , IIniSection item )
+    void ICollection< IIniSection >.Add ( IIniSection item ) { Add ( item , out _ ); }
+
+    public bool Insert ( int index , IIniSection item , out CheckItemErrors error )
     {
-        CheckItem ( item );
+        if ( !IsValidItem ( item , out error ) ) { return false; }
+
         _sections.Insert ( index , item );
+
+        return true;
     }
 
     public IIniSection this [ int index ]
     {
         get => _sections[index];
-        set
-        {
-            CheckItem ( value );
-            _sections[index] = value;
-        }
+        set => TrySetItem ( index , value , out _ );
     }
+
+    public bool TrySetItem ( int index , IIniSection value , out CheckItemErrors error )
+    {
+        if ( !IsValidItem ( value , out error ) ) { return false; }
+
+        _sections[index] = value;
+
+        return true;
+    }
+
     public IEnumerator< IIniSection > GetEnumerator() => _sections.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     public void Clear() { _sections.Clear(); }
-
-    public bool Contains ( IIniSection item )
-    {
-        if ( item == null || !string.Equals ( item.Name , SectionName , StringComparison.OrdinalIgnoreCase ) ) { return false; }
-
-        return _sections.Contains ( item );
-    }
-
+    public bool Contains ( IIniSection item ) => _sections.Contains ( item );
     public void CopyTo ( IIniSection[] array , int arrayIndex ) { _sections.CopyTo ( array , arrayIndex ); }
     public bool Remove ( IIniSection item ) => _sections.Remove ( item );
     public int Count => _sections.Count;
     public bool IsReadOnly => ( (ICollection< IIniSection >) _sections ).IsReadOnly;
     public int IndexOf ( IIniSection item ) => _sections.IndexOf ( item );
+    void IList< IIniSection >.Insert ( int index , IIniSection item ) { Insert ( index , item , out _ ); }
     public void RemoveAt ( int index ) { _sections.RemoveAt ( index ); }
+    #endregion
 }

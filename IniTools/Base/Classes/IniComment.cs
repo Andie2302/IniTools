@@ -10,6 +10,6 @@ public sealed class IniComment ( string comment ) : IIniComment
     public bool Equals ( IIniComment? other ) { return other is not null && ( ReferenceEquals ( this , other ) || string.Equals ( Comment , other.Comment , StringComparison.OrdinalIgnoreCase ) ); }
     public override bool Equals ( object? obj ) { return Equals ( obj as IIniComment ); }
     public override int GetHashCode() { return StringComparer.OrdinalIgnoreCase.GetHashCode ( Comment ?? "" ); }
-    public static bool operator == ( IniComment? left , IniComment? right ) { return left is null ? right is null : left.Equals ( right ); }
+    public static bool operator == ( IniComment? left , IniComment? right ) { return left?.Equals ( right ) ?? right is null; }
     public static bool operator != ( IniComment? left , IniComment? right ) => !( left == right );
 }
