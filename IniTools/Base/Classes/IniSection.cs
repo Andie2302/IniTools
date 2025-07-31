@@ -6,22 +6,26 @@ namespace IniTools.Base.Classes;
 
 public sealed class IniSection ( string name ) : IIniSection
 {
+    private const StringComparison SectionNameComparison = StringComparison.OrdinalIgnoreCase;
+    private static readonly StringComparer SectionNameComparer = StringComparer.OrdinalIgnoreCase;
+    public string Name { get; } = name?.Trim() ?? string.Empty;
     private readonly List< IIniSectionAddAble > _elements = [ ];
-    public string Name { get; } = name;
     public IReadOnlyList< IIniSectionAddAble > Elements => _elements;
 
-    public void AddElement ( IIniSectionAddAble element )
+    public bool AddElement ( IIniSectionAddAble? element )
     {
-        if ( element is null ) { throw new ArgumentNullException ( nameof ( element ) ); }
+        if ( element is null ) { return false; }
 
         _elements.Add ( element );
+
+        return true;
     }
 
-    private static string ToSectionKey ( string? sectionName ) => sectionName?.Trim() ?? string.Empty;
-    public int CompareTo ( IIniSection? other ) { return other is null ? 1 : string.Compare ( ToSectionKey ( Name ) , ToSectionKey ( other.Name ) , StringComparison.OrdinalIgnoreCase ); }
-    public bool Equals ( IIniSection? other ) { return other is not null && ( ReferenceEquals ( this , other ) || string.Equals ( ToSectionKey ( Name ) , ToSectionKey ( other.Name ) , StringComparison.OrdinalIgnoreCase ) ); }
-    public override bool Equals ( object? obj ) { return Equals ( obj as IIniSection ); }
-    public override int GetHashCode() { return StringComparer.OrdinalIgnoreCase.GetHashCode ( ToSectionKey ( Name ) ); }
-    public static bool operator == ( IniSection? left , IniSection? right ) { return left is null ? right is null : left.Equals ( right ); }
+    public int CompareTo ( IIniSection? other ) => string.Compare ( Name , other?.Name , SectionNameComparison );
+    public bool Equals ( IIniSection? other ) => other is not null && ( ReferenceEquals ( this , other ) || SectionNameComparer.Equals ( Name , other.Name ) );
+    public override bool Equals ( object? obj ) => Equals ( obj as IIniSection );
+    public override int GetHashCode() => SectionNameComparer.GetHashCode ( Name );
+    public static bool operator == ( IniSection? left , IniSection? right ) => left?.Equals ( right ) ?? right is null;
     public static bool operator != ( IniSection? left , IniSection? right ) => !( left == right );
+    public override string ToString() => $"[{Name}] ({Elements.Count} elements)";
 }
