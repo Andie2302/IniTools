@@ -5,61 +5,33 @@ using IniTools.Base.Interfaces;
 
 namespace IniTools.Scratch;
 
-public enum CheckItemErrors
-{
-    None ,
-    NameNotMatching ,
-    ItemIsNull ,
-    UnknownError ,
-}
-
-public interface IIniSectionList : IList< IIniSection >
-{
-    string SectionName { get; }
-    bool IsGlobal { get; }
-    int Count { get; }
-    bool IsReadOnly { get; }
-    IIniSection this [ int index ] { get; set; }
-    bool IsValidItem ( IIniSection? item , out CheckItemErrors error );
-    bool Add ( IIniSection item , out CheckItemErrors error );
-    bool Insert ( int index , IIniSection item , out CheckItemErrors error );
-    bool TrySetItem ( int index , IIniSection value , out CheckItemErrors error );
-    IEnumerator< IIniSection > GetEnumerator();
-    void Clear();
-    bool Contains ( IIniSection item );
-    void CopyTo ( IIniSection[] array , int arrayIndex );
-    bool Remove ( IIniSection item );
-    int IndexOf ( IIniSection item );
-    void RemoveAt ( int index );
-}
-
 public class IniSectionList ( string sectionName ) : IIniSectionList
 {
     private readonly List< IIniSection > _sections = [ ];
     public string SectionName { get; } = sectionName?.Trim() ?? string.Empty;
     public bool IsGlobal => SectionName == string.Empty;
 
-    public bool IsValidItem ( IIniSection? item , out CheckItemErrors error )
+    public bool IsValidItem ( IIniSection? item , out IniCheckItemErrors error )
     {
         if ( item == null ) {
-            error = CheckItemErrors.ItemIsNull;
+            error = IniCheckItemErrors.ItemIsNull;
 
             return false;
         }
 
         if ( !IsGlobal && !string.Equals ( item.Name , SectionName , StringComparison.OrdinalIgnoreCase ) ) {
-            error = CheckItemErrors.NameNotMatching;
+            error = IniCheckItemErrors.NameNotMatching;
 
             return false;
         }
 
-        error = CheckItemErrors.None;
+        error = IniCheckItemErrors.Success;
 
         return true;
     }
 
     #region IList Implementation (mit Korrekturen)
-    public bool Add ( IIniSection item , out CheckItemErrors error )
+    public bool Add ( IIniSection item , out IniCheckItemErrors error )
     {
         if ( !IsValidItem ( item , out error ) ) { return false; }
 
@@ -70,7 +42,7 @@ public class IniSectionList ( string sectionName ) : IIniSectionList
 
     void ICollection< IIniSection >.Add ( IIniSection item ) { Add ( item , out _ ); }
 
-    public bool Insert ( int index , IIniSection item , out CheckItemErrors error )
+    public bool Insert ( int index , IIniSection item , out IniCheckItemErrors error )
     {
         if ( !IsValidItem ( item , out error ) ) { return false; }
 
@@ -85,7 +57,7 @@ public class IniSectionList ( string sectionName ) : IIniSectionList
         set => TrySetItem ( index , value , out _ );
     }
 
-    public bool TrySetItem ( int index , IIniSection value , out CheckItemErrors error )
+    public bool TrySetItem ( int index , IIniSection value , out IniCheckItemErrors error )
     {
         if ( !IsValidItem ( value , out error ) ) { return false; }
 
