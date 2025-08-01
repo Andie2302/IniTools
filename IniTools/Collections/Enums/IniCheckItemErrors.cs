@@ -1,4 +1,4 @@
-﻿namespace IniTools.Scratch;
+﻿namespace IniTools.Collections.Enums;
 
 public enum IniCheckItemErrors
 {

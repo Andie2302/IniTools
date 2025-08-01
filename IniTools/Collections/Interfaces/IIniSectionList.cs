@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using IniTools.Base.Interfaces;
+using IniTools.Collections.Enums;
 
-namespace IniTools.Scratch;
+namespace IniTools.Collections.Interfaces;
 
 public interface IIniSectionList : IList< IIniSection >
 {

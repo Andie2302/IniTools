@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using IniTools.Collections.Interfaces;
 
-namespace IniTools.Scratch.typen;
+namespace IniTools.Collections.Classes;
 
 public class IniSectionLookup() : KeyedCollection< string , IIniSectionList > ( StringComparer.OrdinalIgnoreCase )
 {

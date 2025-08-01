@@ -1,4 +1,4 @@
-﻿namespace IniTools.Scratch.typen;
+﻿namespace IniTools.Collections.Interfaces;
 
 public interface IIniSectionCollection
 { }

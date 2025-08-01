@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using IniTools.Base.Interfaces;
+using IniTools.Collections.Enums;
+using IniTools.Collections.Interfaces;
 
-namespace IniTools.Scratch;
+namespace IniTools.Collections.Classes;
 
 public class IniSectionList ( string sectionName ) : IIniSectionList
 {
