@@ -5,7 +5,7 @@ using IniTools.Collections.Enums;
 
 namespace IniTools.Collections.Classes;
 
-public class IniSectionList ( string sectionName )
+public class IniSectionList ( string sectionName ) : IIniSectionList
 {
     private readonly List< IIniSection > _sections = [ ];
     public string SectionName { get; } = sectionName?.Trim() ?? string.Empty;

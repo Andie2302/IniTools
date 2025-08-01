@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using IniTools.Base.Interfaces;
+using IniTools.Collections.Enums;
+using IIniSection = IniTools.Base.Interfaces.IIniSection;
 
 namespace IniTools.Collections.Classes;
 
-public class IniSectionCollection() : KeyedCollection< string , IIniSection > ( StringComparer.OrdinalIgnoreCase )
+public class IniSectionCollection() : KeyedCollection< string , IIniSection > ( StringComparer.OrdinalIgnoreCase ) , IIniSectionCollection
 {
     protected override string GetKeyForItem ( IIniSection item ) { return item.Name; }
 }
