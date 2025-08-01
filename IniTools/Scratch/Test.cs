@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using IniTools.Input;
 using IniTools.Output;
 
 namespace IniTools.Scratch;

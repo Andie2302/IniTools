@@ -3,7 +3,7 @@ using System.IO;
 using IniTools.Base.Classes;
 using IniTools.Collections.Classes;
 
-namespace IniTools.Scratch;
+namespace IniTools.Input;
 
 public static class IniReader
 {
@@ -29,7 +29,7 @@ public static class IniReader
             else {
                 if ( trimmedLine.StartsWith ( ";" , StringComparison.InvariantCultureIgnoreCase ) ) { currentSection.AddElement ( new IniComment ( trimmedLine.Substring ( 1 ) ) ); }
                 else {
-                    if ( trimmedLine.Contains ( '=' ) ) {
+                    if ( trimmedLine.Contains ( "=" ) ) {
                         var parts = trimmedLine.Split ( [ '=' ] , 2 );
                         currentSection.AddElement ( new IniKeyValue ( parts[0].Trim() , parts[1].Trim() ) );
                     }
