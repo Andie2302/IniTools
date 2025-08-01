@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <Folder Include="Base\" />
+        <Folder Include="Scratch\"/>
     </ItemGroup>
 
 </Project>
