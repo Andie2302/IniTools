@@ -1,3 +1,3 @@
-﻿namespace IniTools.Collections.Enums;
+﻿namespace IniTools.Collections.Interfaces;
 
 public interface IIniSectionCollection;

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using IniTools.Collections.Enums;
+using IniTools.Collections.Interfaces;
 using IIniSection = IniTools.Base.Interfaces.IIniSection;
 
 namespace IniTools.Collections.Classes;

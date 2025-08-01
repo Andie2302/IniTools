@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using IniTools.Base.Interfaces;
 using IniTools.Collections.Enums;
+using IniTools.Collections.Interfaces;
 
 namespace IniTools.Collections.Classes;
 
