@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using IniTools.Base.Classes;
 using IniTools.Collections.Classes;
 
 namespace IniTools.Scratch;
 
-public static class IniFileParser
+public static class IniReader
 {
     public static IniSectionCollection Parse ( string filePath )
     {
