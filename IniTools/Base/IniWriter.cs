@@ -3,7 +3,7 @@ using IniTools.Base.ContentTypes;
 
 namespace IniTools.Base;
 
-public class IniWriter
+public static class IniWriter
 {
     public static string WriteToString ( List< IniLine > lines )
     {
@@ -15,7 +15,8 @@ public class IniWriter
                 IniSectionContent section => $"[{section.SectionName}]" ,
                 IniKeyValueContent kvp => $"{kvp.Key} = {kvp.Value}" ,
                 IniUnknownContent unknown => unknown.Text ,
-                null => string.Empty
+                null => string.Empty ,
+                _ => throw new ArgumentOutOfRangeException()
             };
 
             if ( line.Comment != null ) {
