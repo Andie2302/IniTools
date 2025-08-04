@@ -99,11 +99,12 @@ public sealed class IniWriter
     /// <param name="lines">The INI lines to convert</param>
     /// <param name="settings">Optional writing settings</param>
     /// <returns>String representation of the INI content</returns>
-    public static string WriteToString ( IEnumerable< IniLine > lines , WritingSettings? settings = null )
+    public static string WriteToString ( IEnumerable< IniLine > lines , WritingSettings? settings )
     {
-        var writer = new IniWriter ( settings );
+        ArgumentNullException.ThrowIfNull ( lines );
+        ArgumentNullException.ThrowIfNull ( settings );
 
-        return writer.WriteToString ( lines );
+        return new IniWriter ( settings ).WriteToString ( lines );
     }
 
     /// <summary>
@@ -112,10 +113,12 @@ public sealed class IniWriter
     /// <param name="lines">The INI lines to write</param>
     /// <param name="filePath">Path where to write the file</param>
     /// <param name="settings">Optional writing settings</param>
-    public static void WriteToFile ( IEnumerable< IniLine > lines , string filePath , WritingSettings? settings = null )
+    public static void WriteToFile ( IEnumerable< IniLine > lines , string filePath , WritingSettings settings )
     {
-        var writer = new IniWriter ( settings );
-        writer.WriteToFile ( lines , filePath );
+        ArgumentNullException.ThrowIfNull ( lines );
+        ArgumentNullException.ThrowIfNull ( filePath );
+        ArgumentNullException.ThrowIfNull ( settings );
+        new IniWriter ( settings ).WriteToFile ( lines , filePath );
     }
 
     public void WriteToStream ( IEnumerable< IniLine > lines , Stream stream )
