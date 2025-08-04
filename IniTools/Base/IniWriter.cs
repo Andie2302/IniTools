@@ -28,4 +28,6 @@ public static class IniWriter
 
         return builder.ToString();
     }
+
+    public static void WriteToFile ( List< IniLine > lines , string filePath ) => File.WriteAllText ( filePath , WriteToString ( lines ) );
 }
