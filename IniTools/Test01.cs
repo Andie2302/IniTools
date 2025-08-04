@@ -11,7 +11,7 @@ public class Test01
 
         if ( File.Exists ( file ) ) {
             Console.WriteLine ( "File exists" );
-            var x =IniParser.Parse ( file );
+            var x =IniParser.ParseContentString ( file );
 
             foreach ( var line in x ) {
                 Console.WriteLine ( line.Content?.ToString() );
