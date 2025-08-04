@@ -3,16 +3,22 @@ using IniTools.Base.ContentTypes;
 
 namespace IniTools.Base;
 
-public sealed class IniWriter
+public sealed class IniWriter ( WritingSettings? settings = null )
 {
-    private readonly WritingSettings _settings;
-    public IniWriter ( WritingSettings? settings = null ) { _settings = settings ?? WritingSettings.Default; }
+    private readonly WritingSettings _settings = settings ?? WritingSettings.Default;
 
-    public void WriteToStream ( IEnumerable< IniLine > lines , Stream stream )
+    public void WriteToStream ( IEnumerable< IniLine > lines , Stream stream , Encoding? encoding = null )
     {
         ArgumentNullException.ThrowIfNull ( lines );
         ArgumentNullException.ThrowIfNull ( stream );
-        using var writer = new StreamWriter ( stream , leaveOpen : true );
+        using var writer = new StreamWriter ( stream , encoding ?? Encoding.UTF8 , leaveOpen : true );
+        WriteToTextWriter ( lines , writer );
+    }
+
+    public void WriteToTextWriter ( IEnumerable< IniLine > lines , TextWriter writer )
+    {
+        ArgumentNullException.ThrowIfNull ( lines );
+        ArgumentNullException.ThrowIfNull ( writer );
 
         foreach ( var line in lines ) {
             var fullLine = BuildLine ( line );
@@ -20,28 +26,44 @@ public sealed class IniWriter
         }
     }
 
-    public string WriteToString ( IEnumerable< IniLine > lines )
+    public string WriteToString ( IEnumerable< IniLine > lines , Encoding? encoding = null )
     {
         ArgumentNullException.ThrowIfNull ( lines );
         using var memoryStream = new MemoryStream();
-        WriteToStream ( lines , memoryStream );
-        using var reader = new StreamReader ( memoryStream );
+        WriteToStream ( lines , memoryStream , encoding );
+        memoryStream.Position = 0;
+        using var reader = new StreamReader ( memoryStream , encoding ?? Encoding.UTF8 );
 
         return reader.ReadToEnd();
     }
 
-    public void WriteToFile ( IEnumerable< IniLine > lines , string filePath )
+    public void WriteToFile ( IEnumerable< IniLine > lines , string filePath , Encoding? encoding = null )
     {
         ArgumentNullException.ThrowIfNull ( lines );
+        ValidateFilePath ( filePath );
 
-        if ( string.IsNullOrWhiteSpace ( filePath ) ) { throw new ArgumentException ( "File path cannot be null or empty." , nameof ( filePath ) ); }
-
-        using var fileStream = new FileStream ( filePath , FileMode.Create , FileAccess.Write , FileShare.None );
-        WriteToStream ( lines , fileStream );
+        try {
+            using var fileStream = new FileStream ( filePath , FileMode.Create , FileAccess.Write , FileShare.None );
+            WriteToStream ( lines , fileStream , encoding );
+        }
+        catch ( IOException ex ) { throw new InvalidOperationException ( $"Failed to write INI file: {filePath}" , ex ); }
     }
 
-    public static string WriteToString ( IEnumerable< IniLine > lines , WritingSettings? settings = null ) { return new IniWriter ( settings ).WriteToString ( lines ); }
-    public static void WriteToFile ( IEnumerable< IniLine > lines , string filePath , WritingSettings? settings = null ) { new IniWriter ( settings ).WriteToFile ( lines , filePath ); }
+    public async Task WriteToFileAsync ( IEnumerable< IniLine > lines , string filePath , Encoding? encoding = null , CancellationToken cancellationToken = default )
+    {
+        ArgumentNullException.ThrowIfNull ( lines );
+        ValidateFilePath ( filePath );
+
+        try {
+            var content = WriteToString ( lines , encoding );
+            await File.WriteAllTextAsync ( filePath , content , encoding ?? Encoding.UTF8 , cancellationToken );
+        }
+        catch ( IOException ex ) { throw new InvalidOperationException ( $"Failed to write INI file: {filePath}" , ex ); }
+    }
+
+    public static string WriteToString ( IEnumerable< IniLine > lines , WritingSettings? settings = null , Encoding? encoding = null ) { return new IniWriter ( settings ).WriteToString ( lines , encoding ); }
+    public static void WriteToFile ( IEnumerable< IniLine > lines , string filePath , WritingSettings? settings = null , Encoding? encoding = null ) { new IniWriter ( settings ).WriteToFile ( lines , filePath , encoding ); }
+    public static Task WriteToFileAsync ( IEnumerable< IniLine > lines , string filePath , WritingSettings? settings = null , Encoding? encoding = null , CancellationToken cancellationToken = default ) { return new IniWriter ( settings ).WriteToFileAsync ( lines , filePath , encoding , cancellationToken ); }
 
     private string BuildLine ( IniLine line )
     {
@@ -62,12 +84,7 @@ public sealed class IniWriter
         };
     }
 
-    private string FormatKeyValue ( IniKeyValueContent kvp )
-    {
-        var separator = _settings.SpaceAroundSeparator ? $" {_settings.KeyValueSeparator} " : _settings.KeyValueSeparator.ToString();
-
-        return $"{kvp.Key}{separator}{kvp.Value}";
-    }
+    private string FormatKeyValue ( IniKeyValueContent kvp ) { return _settings.SpaceAroundSeparator ? $"{kvp.Key} {_settings.KeyValueSeparator} {kvp.Value}" : $"{kvp.Key}{_settings.KeyValueSeparator}{kvp.Value}"; }
 
     private string CombineContentAndComment ( string contentPart , string? comment )
     {
@@ -78,5 +95,10 @@ public sealed class IniWriter
         var space = _settings.SpaceBeforeComment ? " " : "";
 
         return $"{contentPart}{space}{comment}";
+    }
+
+    private static void ValidateFilePath ( string filePath )
+    {
+        if ( string.IsNullOrWhiteSpace ( filePath ) ) { throw new ArgumentException ( "File path cannot be null or empty." , nameof ( filePath ) ); }
     }
 }
