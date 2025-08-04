@@ -64,16 +64,13 @@ public sealed class IniParser ( ParsingSettings? settings = null )
         return ( content , string.IsNullOrEmpty ( comment ) ? null : comment );
     }
 
-    private IniLineContent? CreateContentFromPart ( string contentPart )
-    {
-        return string.IsNullOrWhiteSpace ( contentPart ) ? null :
-            IsSection ( contentPart ) ? CreateSectionContent ( contentPart ) :
-            IsKeyValue ( contentPart ) ? CreateKeyValueContent ( contentPart ) : new IniUnknownContent ( contentPart );
-    }
+    private IniLineContent? CreateContentFromPart ( string contentPart ) => string.IsNullOrWhiteSpace ( contentPart ) ? null :
+        IsSection ( contentPart ) ? CreateSectionContent ( contentPart ) :
+        IsKeyValue ( contentPart ) ? CreateKeyValueContent ( contentPart ) : new IniUnknownContent ( contentPart );
 
-    private bool IsSection ( string contentPart ) { return contentPart.Length >= 2 && contentPart.StartsWith ( _settings.SectionStartChar ) && contentPart.EndsWith ( _settings.SectionEndChar ); }
-    private bool IsKeyValue ( string contentPart ) { return contentPart.Contains ( _settings.KeyValueSeparator ); }
-    private static IniSectionContent CreateSectionContent ( string contentPart ) { return new IniSectionContent ( contentPart[1..^1].Trim() ); }
+    private bool IsSection ( string contentPart ) => contentPart.Length >= 2 && contentPart.StartsWith ( _settings.SectionStartChar ) && contentPart.EndsWith ( _settings.SectionEndChar );
+    private bool IsKeyValue ( string contentPart ) => contentPart.Contains ( _settings.KeyValueSeparator );
+    private static IniSectionContent CreateSectionContent ( string contentPart ) => new IniSectionContent ( contentPart[1..^1].Trim() );
 
     private IniKeyValueContent CreateKeyValueContent ( string contentPart )
     {
